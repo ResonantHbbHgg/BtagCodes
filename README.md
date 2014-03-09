@@ -28,3 +28,69 @@ note that this package works only in a CMSSW_5_X_Y
     inputTree = name of the tree (all the files must have the same tree name)
     outputName = output name
     
+
+BtagEfficiencyMaps_code on lxbatch
+==================================
+
+1) First thing to do is:
+
+    cd CMSSW_5_X_Y/src
+    cmsenv
+    
+note that this package works only in a CMSSW_5_X_Y
+
+2) In BtagEfficiencyMaps_code directory, compile:
+
+    make 
+    make exe
+    
+3) In BtagEfficiencyMaps_code/test/lxbatch directory prepare the jobs:
+
+    perl launchJobs_lxbatch_eos.pl params_lxbatch.CFG
+    
+    params_lxbatch.CFG has the following input parameters:
+    
+    - BASEDir: complete path of this lxbatch directory, eg:
+    
+        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch
+        
+    - CMSSWPath: CMSSW_5_X_Y release path from which set up the environment, eg:
+        
+        /afs/cern.ch/work/b/bmarzocc/CMSSW_5_3_10/src/
+        
+    - ProgramName: executable file name, eg:
+    
+        Make_BtagEfficiencyMaps
+        
+    - JOBCfgTemplate: cfg file to run, USE THE TEMPLATE:
+    
+        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch/parserParams_template.cfg
+        
+    - LISTOFSamples: txt file of the list of directories that contain the root files, eg of path into the txt:
+      
+        /store/cmst3/user/obondu/H2GGLOBE/Radion/reduced/radion_reduction_v11/mc RadionToHH_2Gamma_2b_M-1100_TuneZ2star_8TeV-Madgraph_pythia6_Summer12_DR53X-PU_RD1_START53_V7N-v1
+
+        where the directory path and the directory have to be separated by a spacetab
+        
+    - OUTPUTSAVEPath: directory where to save the output files (also a eos directory), eg:
+         
+        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch/
+        
+    - OUTPUTFILEName: name of a single job output root file, eg:
+        
+        btagEfficiencies_Radion1100
+    
+    - JOBModulo: numeber of input file run per job
+    
+    - Queue
+    
+2) Launch the jobs (file lancia.sh automatically created):
+
+    sh lancia.sh
+
+
+
+
+
+
+
