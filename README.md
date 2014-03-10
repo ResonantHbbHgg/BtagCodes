@@ -84,13 +84,20 @@ note that this package works only in a CMSSW_5_X_Y
     
     - Queue
     
-2) Launch the jobs (file lancia.sh automatically created):
+3) Launch the jobs (file lancia.sh automatically created):
 
     sh lancia.sh
 
+4) Add all the final maps in a unique file:
 
-
-
+    source scripts/setup.sh
+    ./bin/AddHistos2D.exe cfg/AddHistos.cfg
+    
+in the cfg file there are:
+    
+    inputDir = the directory where the .root files to be added are stored
+    outputName = name of the output file
+    
 
 
 
