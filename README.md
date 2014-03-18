@@ -1,4 +1,4 @@
-BtagEfficiencyMaps_code
+BtagCode
 =======================
 
 1) First thing to do is:
@@ -29,7 +29,7 @@ note that this package works only in a CMSSW_5_X_Y
     outputName = output name
     
 
-BtagEfficiencyMaps_code on lxbatch
+BtagCode on lxbatch
 ==================================
 
 1) First thing to do is:
