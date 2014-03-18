@@ -1,4 +1,4 @@
-BtagEfficiencyMaps_code
+BtagCode
 =======================
 
 1) First thing to do is:
@@ -8,7 +8,7 @@ BtagEfficiencyMaps_code
     
 note that this package works only in a CMSSW_5_X_Y
 
-2) In BtagEfficiencyMaps_code directory:
+2) In BtagCode directory:
 
     source scripts/setup.sh
     
@@ -29,7 +29,7 @@ note that this package works only in a CMSSW_5_X_Y
     outputName = output name
     
 
-BtagEfficiencyMaps_code on lxbatch
+BtagCode on lxbatch
 ==================================
 
 1) First thing to do is:
@@ -39,12 +39,12 @@ BtagEfficiencyMaps_code on lxbatch
     
 note that this package works only in a CMSSW_5_X_Y
 
-2) In BtagEfficiencyMaps_code directory, compile:
+2) In BtagCode directory, compile:
 
     make 
     make exe
     
-3) In BtagEfficiencyMaps_code/test/lxbatch directory prepare the jobs:
+3) In BtagCode/test/lxbatch directory prepare the jobs:
 
     perl launchJobs_lxbatch_eos.pl params_lxbatch.CFG
     
@@ -52,7 +52,7 @@ note that this package works only in a CMSSW_5_X_Y
     
     - BASEDir: complete path of this lxbatch directory, eg:
     
-        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch
+        /afs/cern.ch/work/b/bmarzocc/BtagCode/test/lxbatch
         
     - CMSSWPath: CMSSW_5_X_Y release path from which set up the environment, eg:
         
@@ -64,7 +64,7 @@ note that this package works only in a CMSSW_5_X_Y
         
     - JOBCfgTemplate: cfg file to run, USE THE TEMPLATE:
     
-        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch/parserParams_template.cfg
+        /afs/cern.ch/work/b/bmarzocc/BtagCode/test/lxbatch/parserParams_template.cfg
         
     - LISTOFSamples: txt file of the list of directories that contain the root files, eg of path into the txt:
       
@@ -74,7 +74,7 @@ note that this package works only in a CMSSW_5_X_Y
         
     - OUTPUTSAVEPath: directory where to save the output files (also a eos directory), eg:
          
-        /afs/cern.ch/work/b/bmarzocc/BtagEfficiencyMaps_code/test/lxbatch/
+        /afs/cern.ch/work/b/bmarzocc/BtagCode/test/lxbatch/
         
     - OUTPUTFILEName: name of a single job output root file, eg:
         
