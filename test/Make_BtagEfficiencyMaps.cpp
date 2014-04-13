@@ -40,7 +40,7 @@
 #include <math.h>
 #include <vector>
 
-bool passCutBasedJetId(const TLorentzVector* jetP4,const TLorentzVector* phoP4,const bool& pfloose, const float& betastarclassic, const float& dR2Mean, const int& nvtx);
+bool passCutBasedJetId(const TLorentzVector* jetP4,const bool& pfloose, const float& betastarclassic, const float& dR2Mean, const int& nvtx);
 
 int main(int argc, char** argv)
 {
@@ -101,22 +101,15 @@ int main(int argc, char** argv)
 
   int            vtx_std_n;
   int            jet_algoPF1_n;
-  int            jet_algoPF1_flavour[200];
+  int            jet_algoPF1_flavour[500];
   TClonesArray  *jet_algoPF1_p4;
-  float          jet_algoPF1_csvBtag[200];  
-  float          jet_algoPF1_dR2Mean[200]; 
-  float          jet_algoPF1_betaStarClassic[200];
-  bool           jet_algoPF1_pfloose[200];
-  TClonesArray  *pho_p4;
-  int            dipho_n;
-  int            dipho_leadind[20];   
-  int            dipho_subleadind[20]; 
-  int            dipho_vtxind[20]; 
-  int            vtx_std_sel; 
+  float          jet_algoPF1_csvBtag[500];  
+  float          jet_algoPF1_dR2Mean[500]; 
+  float          jet_algoPF1_betaStarClassic[500];
+  bool           jet_algoPF1_pfloose[500];
 
   jet_algoPF1_p4 = 0;
-  pho_p4 = 0;
-  
+ 
   for(int ii = 0; ii < pos_total; ii++){
       ntu[ii]->SetBranchStatus("*",0);
       ntu[ii]->SetBranchStatus("vtx_std_n",1); 
@@ -127,12 +120,6 @@ int main(int argc, char** argv)
       ntu[ii]->SetBranchStatus("jet_algoPF1_dR2Mean",1);
       ntu[ii]->SetBranchStatus("jet_algoPF1_betaStarClassic",1); 
       ntu[ii]->SetBranchStatus("jet_algoPF1_pfloose",1); 
-      ntu[ii]->SetBranchStatus("pho_p4",1); 
-      ntu[ii]->SetBranchStatus("dipho_n",1); 
-      ntu[ii]->SetBranchStatus("dipho_leadind",1); 
-      ntu[ii]->SetBranchStatus("dipho_subleadind",1); 
-      ntu[ii]->SetBranchStatus("dipho_vtxind",1); 
-      ntu[ii]->SetBranchStatus("vtx_std_sel",1); 
       ntu[ii]->SetBranchAddress("vtx_std_n",&vtx_std_n); 
       ntu[ii]->SetBranchAddress("jet_algoPF1_n",&jet_algoPF1_n);
       ntu[ii]->SetBranchAddress("jet_algoPF1_flavour",&jet_algoPF1_flavour);
@@ -141,12 +128,6 @@ int main(int argc, char** argv)
       ntu[ii]->SetBranchAddress("jet_algoPF1_dR2Mean",&jet_algoPF1_dR2Mean);
       ntu[ii]->SetBranchAddress("jet_algoPF1_betaStarClassic",&jet_algoPF1_betaStarClassic); 
       ntu[ii]->SetBranchAddress("jet_algoPF1_pfloose",&jet_algoPF1_pfloose); 
-      ntu[ii]->SetBranchAddress("pho_p4",&pho_p4);
-      ntu[ii]->SetBranchAddress("dipho_n",&dipho_n);
-      ntu[ii]->SetBranchAddress("dipho_leadind",&dipho_leadind);
-      ntu[ii]->SetBranchAddress("dipho_subleadind",&dipho_subleadind);
-      ntu[ii]->SetBranchAddress("dipho_vtxind",&dipho_vtxind);
-      ntu[ii]->SetBranchAddress("vtx_std_sel",&vtx_std_sel);
   }
 
   float ptmin[21] = {20., 30., 40., 50., 60., 70., 80., 100., 120., 160., 210., 260., 320., 400., 500., 600., 800.,900.,1000.,1200.,1500.};
@@ -181,62 +162,56 @@ int main(int argc, char** argv)
   TH2F* h2_BTaggingEff_Denom_udsg_T = new TH2F("h2_BTaggingEff_Denom_udsg_T","h2_BTaggingEff_Denom_c_T",20, ptmin, 7,etamin);
   TH2F* h2_BTaggingEff_Num_udsg_T = new TH2F("h2_BTaggingEff_Num_udsg_T","h2_BTaggingEff_Num_udsg_T",20, ptmin, 7,etamin);
   TH2F* h2_BTaggingEff_udsg_T = new TH2F("h2_BTaggingEff_udsg_T","h2_BTaggingEff_udsg_T",20, ptmin, 7,etamin);
-
-  std::map<int,TLorentzVector*> jetP4;
-  TLorentzVector* phoP4;
-
+ 
+  TLorentzVector* jetP4;
+  
   for(int nn = 0; nn < pos_total; nn++){
       for(int ientry = 0; ientry < ntu[nn]->GetEntries(); ientry++){
           if(ientry%1000==0) std::cout<<"--- Reading file_" << nn << " entry = "<< ientry <<std::endl;
           ntu[nn]->GetEntry(ientry);
 
-          for(int jj = 0; jj < dipho_n; jj++){
-              if(dipho_vtxind[jj] != vtx_std_sel) continue;
-              phoP4 = (TLorentzVector*)pho_p4->ConstructedAt(dipho_leadind[jj]);
-          }
-
           for(int ii = 0; ii < jet_algoPF1_n; ii++){
-
-              jetP4[ii] = (TLorentzVector*)jet_algoPF1_p4->ConstructedAt(ii);
-
-              if(passCutBasedJetId(jetP4[ii],phoP4,jet_algoPF1_pfloose[ii],jet_algoPF1_betaStarClassic[ii],jet_algoPF1_dR2Mean[ii],vtx_std_n) == false) continue;
-               
+              
+              jetP4 = (TLorentzVector*)jet_algoPF1_p4->ConstructedAt(ii);
+              
+              if(passCutBasedJetId(jetP4,jet_algoPF1_pfloose[ii],jet_algoPF1_betaStarClassic[ii],jet_algoPF1_dR2Mean[ii],vtx_std_n) == false) continue;
+           
               if(abs(jet_algoPF1_flavour[ii]) == 5){
                  
-                 h2_BTaggingEff_Denom_b_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_b_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_b_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_b_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                    
-                 h2_BTaggingEff_Denom_b_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_b_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_b_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_b_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                  
-                 h2_BTaggingEff_Denom_b_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_b_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_b_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_b_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
               }
  
               if(abs(jet_algoPF1_flavour[ii]) == 4){
                  
-                 h2_BTaggingEff_Denom_c_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_c_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_c_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_c_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                    
-                 h2_BTaggingEff_Denom_c_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_c_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_c_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_c_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                  
-                 h2_BTaggingEff_Denom_c_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_c_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_c_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_c_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
               }
 
               if(abs(jet_algoPF1_flavour[ii]) == 1 || abs(jet_algoPF1_flavour[ii]) == 2 || abs(jet_algoPF1_flavour[ii]) == 3 || abs(jet_algoPF1_flavour[ii]) == 21){
                  
-                 h2_BTaggingEff_Denom_udsg_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_udsg_L->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_udsg_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.244) h2_BTaggingEff_Num_udsg_L->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                    
-                 h2_BTaggingEff_Denom_udsg_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_udsg_M->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_udsg_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.679) h2_BTaggingEff_Num_udsg_M->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
                  
-                 h2_BTaggingEff_Denom_udsg_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
-                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_udsg_T->Fill(jetP4[ii]->Pt(),fabs(jetP4[ii]->Eta()));
+                 h2_BTaggingEff_Denom_udsg_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
+                 if(jet_algoPF1_csvBtag[ii] > 0.898) h2_BTaggingEff_Num_udsg_T->Fill(jetP4->Pt(),fabs(jetP4->Eta()));
               }
- 
+
           }
 
       } 
@@ -318,13 +293,11 @@ int main(int argc, char** argv)
 
 }
 
-bool passCutBasedJetId(const TLorentzVector* jetP4,const TLorentzVector* phoP4,const bool& pfloose, const float& betastarclassic, const float& dR2Mean, const int& nvtx) {
+bool passCutBasedJetId(const TLorentzVector* jetP4,const bool& pfloose, const float& betastarclassic, const float& dR2Mean, const int& nvtx) {
 
   bool isGood = true;
   float eta = jetP4->Eta();
   
-  //if(jetP4->DeltaR(*phoP4) < 0.5) isGood = false;
-
   if(pfloose == false) isGood = false;
 
   if ( fabs(eta) < 2.5 ) {
