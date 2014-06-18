@@ -300,16 +300,17 @@ bool passCutBasedJetId(const TLorentzVector* jetP4,const bool& pfloose, const fl
   
   if(pfloose == false) isGood = false;
 
-  if ( fabs(eta) < 2.5 ) {
-    if ( betastarclassic > 0.2 * log( nvtx - 0.64) )  isGood = false;
-    if (dR2Mean > 0.06)                               isGood = false;
-  } 
-  else if (fabs(eta) < 3.){
-    if ( dR2Mean > 0.05)  isGood =false;
-  } 
-  else {
-    if ( dR2Mean > 0.055) isGood =false;
-  }
+  //removal of PU rejection cuts
+  //if ( fabs(eta) < 2.5 ) {
+  //  if ( betastarclassic > 0.2 * log( nvtx - 0.64) )  isGood = false;
+  //  if (dR2Mean > 0.06)                               isGood = false;
+  //} 
+  //else if (fabs(eta) < 3.){
+  //  if ( dR2Mean > 0.05)  isGood =false;
+  //} 
+  //else {
+  //  if ( dR2Mean > 0.055) isGood =false;
+  //}
   
   return isGood;
 }
