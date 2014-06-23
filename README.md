@@ -1,3 +1,36 @@
+AddEfficiencyBranches
+=======================
+
+1) First thing to do is:
+
+    cd CMSSW_5_X_Y/src
+    cmsenv
+    
+note that this package works only in a CMSSW_5_X_Y
+
+2) In BtagCode directory:
+
+    source scripts/setup.sh
+    
+3) Compile:
+
+    make 
+    make exe
+    
+4) Run:
+
+    ./bin/AddEfficiencyBranches.cpp.exe cfg/AddEfficiencyBranches.cpp.cfg
+    
+5) NOTE: 
+   in the cfg file there are:
+
+    inputFile = flattree to run
+    doCombinatorics = 0 or 1 (do the cobinatoric choice of the jets in addition to the other selections)
+    addEfficiencies = 0 or 1 (1 if the flattree you are running on don't have the btagEff branches)
+    saveMaps = 0 or 1 (save the btag efficiencies maps, they are save by default in the output directory)
+    outputName = name of the output final flattree
+
+
 BtagCode
 =======================
 
