@@ -2,6 +2,7 @@
 #define __TREEUTILS__
 
 #include "TTree.h"
+#include "TLeaf.h"
 
   int           itype;
   int           run;
@@ -536,4 +537,48 @@ j10_flavour,j11_flavour, j12_flavour,j13_flavour,j14_flavour,j15_flavour;
     b_j15_btagEffError_T->Fill();
   }
 
+TTree* CloneTreeCut(TTree* inputTree, int ev_min, int ev_max){
+
+   TTree *outputTree = (TTree*)inputTree->Clone();
+   //if (outputTree == 0) break;
+ 
+   outputTree->Reset();
+
+  // copy branch addresses starting from branches
+   int i;
+   TObjArray *branches  = inputTree->GetListOfBranches();
+   int nbranches = branches->GetEntriesFast();
+   for (i=0;i<nbranches;i++) {
+      TBranch *branch = (TBranch*)branches->UncheckedAt(i);
+      if (branch->GetAddress()) {
+         outputTree->SetBranchAddress(branch->GetName(),branch->GetAddress());
+      }
+   }
+
+   // copy branch addresses starting from leaves
+   TObjArray *leaves  = inputTree->GetListOfLeaves();
+   TObjArray *tleaves = outputTree->GetListOfLeaves();
+   int nleaves = leaves->GetEntriesFast();
+   for (i=0;i<nleaves;i++) {
+      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(i);
+      TBranch *branch = leaf->GetBranch();
+      if (branch->GetAddress()) {
+         outputTree->SetBranchAddress(branch->GetName(),branch->GetAddress());
+      } else {
+         TLeaf *leaf2 = (TLeaf*)tleaves->UncheckedAt(i);
+         leaf2->SetAddress(leaf->GetValuePointer());
+      }
+   }
+
+   // may be copy some events
+   for (i=ev_min;i<ev_max;i++) {
+      inputTree->GetEvent(i);
+      outputTree->Fill();
+   }
+
+   std::cout << "entries = " << outputTree->GetEntries() << std::endl;
+   
+   return outputTree;  
+   //Tree = (TTree*)outputTree->CloneTree();
+}
 #endif
