@@ -68,6 +68,8 @@ int main(int argc, char** argv)
   int doCombinatorics = gConfigParser -> readIntOption("Input::doCombinatorics");
   int addEfficiencies = gConfigParser -> readIntOption("Input::addEfficiencies");
   int saveMaps = gConfigParser -> readIntOption("Input::saveMaps");
+  int splitTree = gConfigParser -> readIntOption("Input::splitTree");
+  int iFile = gConfigParser -> readIntOption("Input::iFile");
   std::string outputName = gConfigParser -> readStringOption("Output::outputName");
 
   std::cout << "inputFile       = " << inputFile << std::endl;
@@ -75,6 +77,8 @@ int main(int argc, char** argv)
   std::cout << "doCombinatorics = " << doCombinatorics << std::endl;
   std::cout << "addEfficiencies = " << addEfficiencies << std::endl;
   std::cout << "saveMaps        = " << saveMaps << std::endl;
+  std::cout << "splitTree       = " << splitTree << std::endl;
+  std::cout << "iFile           = " << iFile << std::endl;
   
   TFile* file = TFile::Open(inputFile.c_str());
 
@@ -93,6 +97,7 @@ int main(int argc, char** argv)
       if(Class.find("TTree") != std::string::npos && Name.find("8TeV") != std::string::npos) TreeNames.push_back(Name);
   }
   
+  TFile* output_final = new TFile(outputName.c_str(),"RECREATE");
   std::map<int,TTree*> ntu;
   std::map<int,TTree*> ntu_output;
 
@@ -446,10 +451,18 @@ int main(int argc, char** argv)
 
     output->Close();
 
-    ntu_output[ii] = (TTree*)ntu[ii]->CloneTree();
-    AddBranches(ntu_output[ii]);
-
     BtagEfficiencyReader EffReader(("output/btagEfficiencies_"+TreeNames.at(ii)+".root").c_str());
+
+    int ev_min = 0;
+    int ev_max = ntu[ii]->GetEntries();
+
+    if(splitTree == 1 && iFile == 0) ev_max = int(ntu[ii]->GetEntries()/2);
+    if(splitTree == 1 && iFile == 1) ev_min = int(ntu[ii]->GetEntries()/2);
+
+    output_final->cd();
+   
+    ntu_output[ii] = CloneTreeCut(ntu[ii],ev_min,ev_max);
+    AddBranches(ntu_output[ii]);
    
     for(int ientry = 0; ientry < ntu_output[ii]->GetEntries(); ientry++){
       if(ientry%1000==0) std::cout<<"--- Reading tree: " << TreeNames.at(ii) << " - entry = "<< ientry << " for filling efficiencies branches..." << std::endl;
@@ -627,7 +640,6 @@ int main(int argc, char** argv)
     if(saveMaps != 1) system(("rm output/btagEfficiencies_"+TreeNames.at(ii)+".root").c_str());
   }
 
-  TFile* output_final = new TFile(outputName.c_str(),"RECREATE");
   output_final->cd();
 
   for(unsigned ii = 0; ii < TreeNames.size(); ii++)
