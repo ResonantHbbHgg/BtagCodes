@@ -28,6 +28,8 @@ note that this package works only in a CMSSW_5_X_Y
     doCombinatorics = 0 or 1 (do the cobinatoric choice of the jets in addition to the other selections)
     addEfficiencies = 0 or 1 (1 if the flattree you are running on don't have the btagEff branches)
     saveMaps = 0 or 1 (save the btag efficiencies maps, they are save by default in the output directory)
+    splitTree = 0 or 1 (if 1 the new trees has half of the events of the old ones...needed in case you run on diphoton. Remember to run 2                             times the code giving different outputName each time)
+    iFile = 0 or 1 (if splitTree = 1, which half you are running on)
     outputName = name of the output final flattree
 
 
