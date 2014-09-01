@@ -1,4 +1,5 @@
 #include "BTagUtils.h"
+#define BUDEBUG 0
 
 //ctor
 JetFlavourReader::JetFlavourReader(const std::string name_JetFlavourFile)
@@ -30,6 +31,7 @@ JetFlavourReader::~JetFlavourReader()
 //---------------------------------------------------------------------------------------------------------------------------
 int JetFlavourReader::getJetFlavour(const int& lumis, const int& event, const TLorentzVector* jetP4 )
 {
+    if(BUDEBUG) std::cerr << "Entering JetFlavourReader::getJetFlavour" << std::endl;
     int jet_flavour = 0;
 
     for(unsigned int ii = 0; ii < AODjet_p4_[lumis][event].size(); ii++){
@@ -45,6 +47,7 @@ int JetFlavourReader::getJetFlavour(const int& lumis, const int& event, const TL
     dR_.clear();
     dR_map_.clear();
 
+    if(BUDEBUG) std::cerr << "Leaving JetFlavourReader::getJetFlavour" << std::endl;
     return jet_flavour;
 }
 //---------------------------------------------------------------------------------------------------------------------------
@@ -54,7 +57,7 @@ BtagSFReader::BtagSFReader(const std::string name_btagSFFile)
 
     name_btagSFFile_ = name_btagSFFile;
 
-    TFile* btagSF_File_ = new TFile(name_btagSFFile_.c_str(),"READ");
+    TFile* btagSF_File_ = TFile::Open(name_btagSFFile_.c_str());
         
     SFb_CSVL_ = (TF1*)btagSF_File_->Get("SFb_CSVL");
     h1_SFb_CSVL_ = (TH1F*)btagSF_File_->Get("h1_SFb_CSVL");
@@ -96,6 +99,7 @@ BtagSFReader::BtagSFReader(const std::string name_btagSFFile)
     SFudsg_CSVT_00_24_max_ = (TF1*)btagSF_File_->Get("SFudsg_CSVT_00_24_max");
     SFudsg_CSVT_00_24_mean_ = (TF1*)btagSF_File_->Get("SFudsg_CSVT_00_24_mean");
     SFudsg_CSVT_00_24_min_ = (TF1*)btagSF_File_->Get("SFudsg_CSVT_00_24_min");
+
 }
 //---------------------------------------------------------------------------------------------------------------------------
 //dtor
@@ -105,6 +109,7 @@ BtagSFReader::~BtagSFReader()
 //---------------------------------------------------------------------------------------------------------------------------
 float BtagSFReader::getSF(const TLorentzVector* jetP4,const float& flavour, std::string WP)
 {
+    if(BUDEBUG) std::cerr << "Entering BtagSFReader::getSF" << std::endl;
       
     float SF = -1001.;
     
@@ -188,12 +193,14 @@ float BtagSFReader::getSF(const TLorentzVector* jetP4,const float& flavour, std:
           if(jetP4->Pt() < SFudsg_CSVT_00_24_mean_->GetXmin()) SF = SFudsg_CSVT_00_24_mean_->Eval(SFudsg_CSVT_00_24_mean_->GetXmin());
        }
     }
-    
+
+    if(BUDEBUG) std::cerr << "Leaving BtagSFReader::getSF" << std::endl;
     return SF;
 }
 //----------------------------------------------------------------------------------------------------------------------------
 float BtagSFReader::getSFErrorUp(const TLorentzVector* jetP4,const float& flavour, std::string WP)
 {
+    if(BUDEBUG) std::cerr << "Entering BtagSFReader::getSFErrorUp" << std::endl;
       
     float SFerr = -1001.;
     float SFMax = -1001.;
@@ -438,11 +445,13 @@ float BtagSFReader::getSFErrorUp(const TLorentzVector* jetP4,const float& flavou
        }
     }
 
+    if(BUDEBUG) std::cerr << "Leaving BtagSFReader::getSFErrorUp" << std::endl;
     return SFerr;
 }
 //----------------------------------------------------------------------------------------------------------------------------
 float BtagSFReader::getSFErrorDown(const TLorentzVector* jetP4,const float& flavour, std::string WP)
 {
+    if(BUDEBUG) std::cerr << "Entering BtagSFReader::getSFErrorDown" << std::endl;
       
     float SFerr = -1001.;
     float SFmin = -1001.;
@@ -632,16 +641,19 @@ float BtagSFReader::getSFErrorDown(const TLorentzVector* jetP4,const float& flav
        }
     }
 
+    if(BUDEBUG) std::cerr << "Leaving BtagSFReader::getSFErrorDown" << std::endl;
     return SFerr;
 }
 //---------------------------------------------------------------------------------------------------------------------------
 //ctor
-BtagEfficiencyReader::BtagEfficiencyReader(const std::string name_btagEfficienciesFile)
+BtagEfficiencyReader::BtagEfficiencyReader(){};
+
+void BtagEfficiencyReader::Init(const std::string name_btagEfficienciesFile)
 {
 
     name_btagEfficienciesFile_ = name_btagEfficienciesFile;
     
-    TFile* btagEfficiency_File_ = new TFile(name_btagEfficienciesFile_.c_str(),"READ");
+    TFile* btagEfficiency_File_ = TFile::Open(name_btagEfficienciesFile_.c_str());
 
     h2_BTaggingEff_b_L_ = (TH2F*)btagEfficiency_File_->Get("h2_BTaggingEff_b_L");
     h2_BTaggingEff_b_M_ = (TH2F*)btagEfficiency_File_->Get("h2_BTaggingEff_b_M");
@@ -655,7 +667,7 @@ BtagEfficiencyReader::BtagEfficiencyReader(const std::string name_btagEfficienci
     h2_BTaggingEff_udsg_M_ = (TH2F*)btagEfficiency_File_->Get("h2_BTaggingEff_udsg_M");
     h2_BTaggingEff_udsg_T_ = (TH2F*)btagEfficiency_File_->Get("h2_BTaggingEff_udsg_T");
 
-    
+    return;
 }
 //---------------------------------------------------------------------------------------------------------------------------
 //dtor
@@ -665,6 +677,7 @@ BtagEfficiencyReader::~BtagEfficiencyReader()
 //---------------------------------------------------------------------------------------------------------------------------
 float BtagEfficiencyReader::getBtagEfficiency(const TLorentzVector* jetP4, std::string WP, const int& jet_flavour)
 {
+     if(BUDEBUG) std::cerr << "Entering BtagEfficiencyReader::getBtagEfficiency" << std::endl;
 
      float eff = -1001.;
 
@@ -688,10 +701,13 @@ float BtagEfficiencyReader::getBtagEfficiency(const TLorentzVector* jetP4, std::
      }
      
      if(eff == 0) eff = -1001.;
+     if(BUDEBUG) std::cerr << "Leaving BtagEfficiencyReader::getBtagEfficiency" << std::endl;
      return eff;
 }
 //---------------------------------------------------------------------------------------------------------------------------
-float BtagEfficiencyReader::getBtagEfficiencyError(const TLorentzVector* jetP4, std::string WP, const int& jet_flavour){
+float BtagEfficiencyReader::getBtagEfficiencyError(const TLorentzVector* jetP4, std::string WP, const int& jet_flavour)
+{
+     if(BUDEBUG) std::cerr << "Entering BtagEfficiencyReader::getBtagEfficiencyError" << std::endl;
 
      float eff_err = -1001.;
 
@@ -714,6 +730,7 @@ float BtagEfficiencyReader::getBtagEfficiencyError(const TLorentzVector* jetP4, 
      }
 
      if(eff_err == 0) eff_err = -1001.;
+     if(BUDEBUG) std::cerr << "Leaving BtagEfficiencyReader::getBtagEfficiencyError" << std::endl;
      return eff_err;
 }
 
@@ -846,204 +863,6 @@ float eventWeight_error_2jets(std::string WP, const float& j1_SF, const float& j
       return sqrt(err2);
 }
 
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_error_2jets_SIMPLE(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j1_eff_error, const float& j2_eff, const float& j2_eff_error, const float& j1_flavour, const float& j2_flavour, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 0.;
-      float weight2 = 0.;
-      
-      float dW1oSF = 0.;
-      float dW2oSF = 0.;
-      
-      float dW1oEff = 0; 
-      float dW2oEff = 0;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF;
-      else weight1 = (1-j1_SF*j1_eff)/(1-j1_eff);
-      if(j1_csvBtag > csvWP) dW1oSF = 1.;
-      else dW1oSF = -j1_eff/(1-j1_eff);
-      if(j1_csvBtag > csvWP) dW1oEff = 0.;
-      else dW1oEff = (1-j1_SF)/((1-j1_eff)*(1-j1_eff));
-
-      if(j2_csvBtag > csvWP) weight2 = j2_SF;
-      else weight2 = (1-j2_SF*j2_eff)/(1-j2_eff);
-      if(j2_csvBtag > csvWP) dW2oSF = 1.;
-      else dW2oSF = -j2_eff/(1-j2_eff);
-      if(j2_csvBtag > csvWP) dW2oEff = 0.;
-      else dW2oEff = (1-j2_SF)/((1-j2_eff)*(1-j2_eff));
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0){
-         weight1 = 0.;
-         dW1oSF = 0.;
-         dW1oEff = 0.;
-      }
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0){
-         weight2 = 0.;
-         dW2oSF = 0.;
-         dW2oEff = 0.;
-      }
-
-      float err2 = (dW1oSF*weight2)*(dW1oSF*weight2)*j1_SF_error*j1_SF_error + 
-                   (dW2oSF*weight1)*(dW2oSF*weight1)*j2_SF_error*j2_SF_error;
-
-      return sqrt(err2);
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
-      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
-      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
-
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_UP_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
-      else weight1 = (1-j1_SF*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
-      else weight2 = (1-j2_SF*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
-
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_UP_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF;
-      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF;
-      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
-
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
-      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
-      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_DOWN_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
-      else weight1 = (1-j1_SF*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
-      else weight2 = (1-j2_SF*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
-//---------------------------------------------------------------------------------------------------------------------------
-
-float eventWeight_NAIVE_2jets_DOWN_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
-
-      float csvWP = 0.;
-      
-      if(WP == "loose") csvWP = 0.244;
-      if(WP == "medium") csvWP = 0.679;
-      if(WP == "tight") csvWP = 0.898;
-
-      float weight1 = 1.;
-      float weight2 = 1.;
-      
-      if(j1_csvBtag > csvWP) weight1 = j1_SF;
-      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
-      if(j2_csvBtag > csvWP) weight2 = j2_SF;
-      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
-      
-
-      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
-      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
-      
-      return weight1*weight2;
-}
 //---------------------------------------------------------------------------------------------------------------------------
 
 float eventWeight_3jets(std::string WP, const float& j1_SF, const float& j2_SF, const float& j3_SF, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag){
@@ -1329,4 +1148,278 @@ float eventWeight_error_4jets(std::string WP, const float& j1_SF, const float& j
       return sqrt(err2);
 }
 
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
+      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
+      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_3jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      float weight3 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
+      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
+      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
+      if(j3_csvBtag > csvWP) weight3 = j3_SF+j3_SF_error;
+      else weight3 = (1-(j3_SF+j3_SF_error)*j3_eff)/(1-j3_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      if(j3_csvBtag <= csvWP && (1-j3_eff) == 0) weight3 = 0.;
+      
+      return weight1*weight2*weight3;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_4jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j4_SF, const float& j4_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j4_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      float weight3 = 1.;
+      float weight4 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
+      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
+      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
+      if(j3_csvBtag > csvWP) weight3 = j3_SF+j3_SF_error;
+      else weight3 = (1-(j3_SF+j3_SF_error)*j3_eff)/(1-j3_eff);
+      if(j4_csvBtag > csvWP) weight4 = j4_SF+j4_SF_error;
+      else weight4 = (1-(j4_SF+j4_SF_error)*j4_eff)/(1-j4_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      if(j3_csvBtag <= csvWP && (1-j3_eff) == 0) weight3 = 0.;
+      if(j4_csvBtag <= csvWP && (1-j4_eff) == 0) weight4 = 0.;
+      
+      return weight1*weight2*weight3*weight4;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_UP_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF+j1_SF_error;
+      else weight1 = (1-j1_SF*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF+j2_SF_error;
+      else weight2 = (1-j2_SF*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_UP_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF;
+      else weight1 = (1-(j1_SF+j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF;
+      else weight2 = (1-(j2_SF+j2_SF_error)*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
+      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
+      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_3jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff,const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      float weight3 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
+      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
+      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
+      if(j3_csvBtag > csvWP) weight3 = j3_SF-j3_SF_error;
+      else weight3 = (1-(j3_SF-j3_SF_error)*j3_eff)/(1-j3_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      if(j3_csvBtag <= csvWP && (1-j3_eff) == 0) weight3 = 0.;
+      
+      return weight1*weight2*weight3;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_4jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j4_SF, const float& j4_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff,  const float& j4_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      float weight3 = 1.;
+      float weight4 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
+      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
+      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
+      if(j3_csvBtag > csvWP) weight3 = j3_SF-j3_SF_error;
+      else weight3 = (1-(j3_SF-j3_SF_error)*j3_eff)/(1-j3_eff);
+      if(j4_csvBtag > csvWP) weight4 = j4_SF-j4_SF_error;
+      else weight4 = (1-(j4_SF-j4_SF_error)*j4_eff)/(1-j4_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      if(j3_csvBtag <= csvWP && (1-j3_eff) == 0) weight3 = 0.;
+      if(j4_csvBtag <= csvWP && (1-j4_eff) == 0) weight4 = 0.;
+      
+      return weight1*weight2*weight3*weight4;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_DOWN_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF-j1_SF_error;
+      else weight1 = (1-j1_SF*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF-j2_SF_error;
+      else weight2 = (1-j2_SF*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
+//---------------------------------------------------------------------------------------------------------------------------
+
+float eventWeight_NAIVE_2jets_DOWN_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag){
+
+      float csvWP = 0.;
+      
+      if(WP == "loose") csvWP = 0.244;
+      if(WP == "medium") csvWP = 0.679;
+      if(WP == "tight") csvWP = 0.898;
+
+      float weight1 = 1.;
+      float weight2 = 1.;
+      
+      if(j1_csvBtag > csvWP) weight1 = j1_SF;
+      else weight1 = (1-(j1_SF-j1_SF_error)*j1_eff)/(1-j1_eff);
+      if(j2_csvBtag > csvWP) weight2 = j2_SF;
+      else weight2 = (1-(j2_SF-j2_SF_error)*j2_eff)/(1-j2_eff);
+      
+
+      if(j1_csvBtag <= csvWP && (1-j1_eff) == 0) weight1 = 0.;
+      if(j2_csvBtag <= csvWP && (1-j2_eff) == 0) weight2 = 0.;
+      
+      return weight1*weight2;
+}
 //---------------------------------------------------------------------------------------------------------------------------
