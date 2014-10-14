@@ -19,7 +19,7 @@ note that this package works only in a CMSSW_5_X_Y
     
 4) Run:
 
-    ./bin/AddEfficiencyBranches.cpp.exe cfg/AddEfficiencyBranches.cpp.cfg
+    ./bin/AddEfficiencyBranches.exe cfg/AddEfficiencyBranches.cfg
     
 5) NOTE: 
    in the cfg file there are:
