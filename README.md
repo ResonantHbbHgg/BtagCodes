@@ -8,7 +8,9 @@ AddEfficiencyBranches
     
 note that this package works only in a CMSSW_5_X_Y
 
-2) git clone https://github.com/ResonantHbbHgg/BtagCodes
+2) Download the package:
+
+    git clone https://github.com/ResonantHbbHgg/BtagCodes
 
 3) In BtagCode directory:
 
