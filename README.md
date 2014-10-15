@@ -8,20 +8,22 @@ AddEfficiencyBranches
     
 note that this package works only in a CMSSW_5_X_Y
 
-2) In BtagCode directory:
+2) git clone https://github.com/ResonantHbbHgg/BtagCodes
+
+3) In BtagCode directory:
 
     source scripts/setup.sh
     
-3) Compile:
+4) Compile:
 
     make 
     make exe
     
-4) Run:
+5) Run:
 
     ./bin/AddEfficiencyBranches.exe cfg/AddEfficiencyBranches.cfg
     
-5) NOTE: 
+6) NOTE: 
    in the cfg file there are:
 
     inputFile = flattree to run
