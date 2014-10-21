@@ -18,6 +18,7 @@ note that this package works only in a CMSSW_5_X_Y
     
 4) Compile:
 
+    make
     make exe
     
 5) Run:
