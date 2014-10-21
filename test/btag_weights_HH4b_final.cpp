@@ -258,8 +258,7 @@ int main(int argc, char** argv)
     else if(jj == 8) JetChoice  = "fj1_fj2";
 
 
-    EffReader[jj] = new BtagEfficiencyReader();
-    EffReader[jj]->Init(std::string(inputEffReader+"_"+JetChoice+".root"));
+    EffReader[jj] = new BtagEfficiencyReader(std::string(inputEffReader+"_"+JetChoice+".root"));
     //std::cout << "BtagEff = " << std::string(inputEffReader+"_"+JetChoice+".root") << std::endl;
   }
 
