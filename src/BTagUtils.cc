@@ -646,9 +646,8 @@ float BtagSFReader::getSFErrorDown(const TLorentzVector* jetP4,const float& flav
 }
 //---------------------------------------------------------------------------------------------------------------------------
 //ctor
-BtagEfficiencyReader::BtagEfficiencyReader(){};
 
-void BtagEfficiencyReader::Init(const std::string name_btagEfficienciesFile)
+BtagEfficiencyReader::BtagEfficiencyReader(const std::string name_btagEfficienciesFile)
 {
 
     name_btagEfficienciesFile_ = name_btagEfficienciesFile;
