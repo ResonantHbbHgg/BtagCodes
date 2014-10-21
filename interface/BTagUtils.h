@@ -98,7 +98,7 @@ class BtagEfficiencyReader
 {
 public:
 	
-    BtagEfficiencyReader(const std::string name_btagEfficienciesFile); 
+    BtagEfficiencyReader(const std::string name_btagEfficienciesFile);
     virtual ~BtagEfficiencyReader();
     float getBtagEfficiency(const TLorentzVector* jetP4, std::string WP, const int& jet_flavour);
     float getBtagEfficiencyError(const TLorentzVector* jetP4, std::string WP, const int& jet_flavour);
@@ -132,20 +132,6 @@ float eventWeight_2jets(std::string WP, const float& j1_SF, const float& j2_SF, 
 
 float eventWeight_error_2jets(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j1_eff_error, const float& j2_eff, const float& j2_eff_error, const float& j1_flavour, const float& j2_flavour, const float& j1_csvBtag, const float& j2_csvBtag);
 
-float eventWeight_error_2jets_SIMPLE(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j1_eff_error, const float& j2_eff, const float& j2_eff_error, const float& j1_flavour, const float& j2_flavour, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_UP_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_UP_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_DOWN_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
-float eventWeight_NAIVE_2jets_DOWN_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
-
 float eventWeight_3jets(std::string WP, const float& j1_SF, const float& j2_SF, const float& j3_SF, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag);
 
 float eventWeight_error_3jets(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j1_eff, const float& j1_eff_error, const float& j2_eff, const float& j2_eff_error, const float& j3_eff, const float& j3_eff_error, const float& j1_flavour, const float& j2_flavour, const float& j3_flavour, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag);
@@ -153,5 +139,26 @@ float eventWeight_error_3jets(std::string WP, const float& j1_SF, const float& j
 float eventWeight_4jets(std::string WP, const float& j1_SF, const float& j2_SF, const float& j3_SF, const float& j4_SF, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j4_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag);
 
 float eventWeight_error_4jets(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j4_SF, const float& j4_SF_error, const float& j1_eff, const float& j1_eff_error, const float& j2_eff, const float& j2_eff_error, const float& j3_eff, const float& j3_eff_error, const float& j4_eff, const float& j4_eff_error, const float& j1_flavour, const float& j2_flavour, const float& j3_flavour, const float& j4_flavour, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag);
+
+float eventWeight_NAIVE_2jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
+float eventWeight_NAIVE_3jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag);
+
+float eventWeight_NAIVE_4jets_UP(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j4_SF, const float& j4_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff, const float& j4_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag);
+
+float eventWeight_NAIVE_2jets_UP_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
+float eventWeight_NAIVE_2jets_UP_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
+float eventWeight_NAIVE_2jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
+float eventWeight_NAIVE_3jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff,const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag);
+
+float eventWeight_NAIVE_4jets_DOWN(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j3_SF, const float& j3_SF_error, const float& j4_SF, const float& j4_SF_error, const float& j1_eff, const float& j2_eff, const float& j3_eff,  const float& j4_eff, const float& j1_csvBtag, const float& j2_csvBtag, const float& j3_csvBtag, const float& j4_csvBtag);
+
+float eventWeight_NAIVE_2jets_DOWN_tagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
+float eventWeight_NAIVE_2jets_DOWN_untagged(std::string WP, const float& j1_SF, const float& j1_SF_error, const float& j2_SF, const float& j2_SF_error, const float& j1_eff, const float& j2_eff, const float& j1_csvBtag, const float& j2_csvBtag);
+
 
 #endif
